@@ -2,15 +2,9 @@ import random
 import field_class
 
 def fast_exp(a, p):
-    """
-    Calculating a^(p-1)/2 by doing fast exponentiation
-    :param a:
-    :param p:
-    :return:
-    """
     result = 1
     base = a
-    exponent = (p - 1) / 2
+    exponent = (p - 1) // 2
     while exponent > 0:
         if exponent % 2 == 1:
             result = (result * base) % p
@@ -26,5 +20,9 @@ def is_irreducible(a, p):
     while True:
         t = random.randrange(p)
         xi = field_class.ExtensionFieldElement(0, 1, t, a, p)
-        if xi ** p != xi:
+        xi_p = xi ** p
+        if xi_p != xi and xi_p.y != 0:
             return t
+
+
+

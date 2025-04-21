@@ -41,4 +41,6 @@ class ExtensionFieldElement:
         return result
 
     def is_in_base_field(self):
-        return self.y == 0
+        if self.y == 0:
+            return True
+

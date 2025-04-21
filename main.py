@@ -11,10 +11,11 @@ if not functions.square_check(a, p):
     sys.exit("a is not a square")
 
 t = functions.is_irreducible(a, p)
+print(t)
 
 xi = field_class.ExtensionFieldElement(0, 1, t, a, p)
 
-b = xi ** ((p + 1) / 2)
+b = xi ** ((p + 1) // 2)
 
 # Checking everything
 if b.is_in_base_field():
