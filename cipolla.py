@@ -5,8 +5,8 @@ class ExtensionFieldElement:
         """Representing the elements x + y * ξ of the ring with tuples
         and since the operations depend on a, t and p we represent
         the elements in the class with 5-tuples"""
-        self.x = x % p
-        self.y = y % p
+        self.x = x
+        self.y = y
         self.t = t
         self.a = a
         self.p = p
