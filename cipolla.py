@@ -2,31 +2,34 @@ import random
 
 class ExtensionFieldElement:
     def __init__(self, x, y, t, a, p ):
-        """Represents x + y*ξ where ξ^2 = tξ - a"""
+        """Representing the elements x + y * ξ of the ring with tuples
+        and since the operations depend on a, t and p we represent
+        the elements in the class with 5-tuples"""
         self.x = x % p
         self.y = y % p
         self.t = t
         self.a = a
         self.p = p
 
+    # Defining addition
     def __add__(self, other):
         return ExtensionFieldElement(
-            self.x + other.x,
-            self.y + other.y,
+            (self.x + other.x) % self.p ,
+            (self.y + other.y) % self.p,
             self.t,
             self.a,
             self.p
         )
 
+    # Two elements are equal if their x and y coordinates are equal
     def __eq__(self, other):
-        return (self.x == other.x and self.y == other.y and
-                self.t == other.t and self.a == other.a and self.p == other.p)
+        return self.x == other.x and self.y == other.y
 
+    # Defining multiplication using the fact that ξ^2 = tξ - a
     def __mul__(self, other):
         x1, y1 = self.x, self.y
         x2, y2 = other.x, other.y
         p, t, a = self.p, self.t, self.a
-        # ξ^2 = tξ - a
         new_x = (x1 * x2 + y1 * y2 * (-a)) % p
         new_y = (x1 * y2 + x2 * y1 + y1 * y2 * t) % p
         return ExtensionFieldElement(new_x, new_y, t, a, p)
@@ -39,29 +42,34 @@ class ExtensionFieldElement:
             if exponent % 2 == 1:
                 result = result * base
             base = base * base
-            exponent //= 2
+            exponent = exponent // 2
         return result
 
+    # If an element lies in the original field it returns True
     def is_in_base_field(self):
-        if self.y == 0:
-            return True
+        return self.y == 0
 
-def fast_exp(a, p):
+# Calculating Legendre (a/p)
+def legendre(a, p):
     result = 1
     base = a
-    exponent = (p - 1) // 2
+    exponent = (p - 1) / 2
     while exponent > 0:
         if exponent % 2 == 1:
             result = (result * base) % p
         base = base * base
-        exponent //= 2
+        exponent = exponent // 2
     return result
 
+# Checking a being a square
 def square_check(a, p):
-        if fast_exp(a, p) == 1:
+        if legendre(a, p) == 1:
             return True
 
+
 def is_irreducible(a, p):
+    """Checking weather the polynomial which we use for
+    factorizing Fp[x] is irreducible or not."""
     while True:
         t = random.randrange(p)
         xi = ExtensionFieldElement(0, 1, t, a, p)
@@ -69,7 +77,9 @@ def is_irreducible(a, p):
         if xi_p != xi and xi_p.y != 0:
             return t
 
+
 def cip_alg(a, p):
+    """Calculating one of the square roots of a"""
     if not square_check(a, p):
         message = "a is not a square"
         return message
