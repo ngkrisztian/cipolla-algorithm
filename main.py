@@ -1,27 +1,16 @@
-import functions
-import sys
-import field_class
+def fast_exp(a, p):
+    result = 1
+    base = a
+    exponent = (p - 1) // 2
+    while exponent > 0:
+        if exponent % 2 == 1:
+            result = (result * base) % p
+        base = base * base
+        exponent //= 2
+    return result
 
+def square_check(a, p):
+        if fast_exp(a, p) == 1:
+            return True
 
-# Choose input p and a
-p = 11
-a = 3
-
-if not functions.square_check(a, p):
-    sys.exit("a is not a square")
-
-t = functions.is_irreducible(a, p)
-
-xi = field_class.ExtensionFieldElement(0, 1, t, a, p)
-
-b = xi ** ((p + 1) // 2)
-
-# Checking everything
-if b.is_in_base_field():
-    print("That is good")
-
-a_in_field = field_class.ExtensionFieldElement(a, 0, t, a, p)
-if b ** 2 == a_in_field:
-    print("That is also good")
-
-print(b.x)
+print(square_check(2377, 6037))

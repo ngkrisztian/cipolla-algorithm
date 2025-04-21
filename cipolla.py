@@ -79,4 +79,6 @@ def cip_alg(a, p):
         b = xi ** ((p + 1) // 2)
         return b.x
 
+print(cip_alg(2377, 9973))
+
 
